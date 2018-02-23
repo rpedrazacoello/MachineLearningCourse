@@ -19,7 +19,7 @@ p = zeros(m, 1);
 %	if(sigmoid(X(i, :) * theta) >= .5),
 %		p(i) = 1;
 %	else
-%		p(1) = 0;
+%		p(i) = 0;
 %	end
 %end
 

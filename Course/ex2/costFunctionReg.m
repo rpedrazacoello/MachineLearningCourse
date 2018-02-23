@@ -19,7 +19,7 @@ grad = zeros(size(theta));
 
 
 tempTheta = theta;
-tempTheta(1) = 0
+tempTheta(1) = 0;
 
 first = -y .* log(sigmoid(X * theta));
 secondo = (1 - y) .* log(1 - sigmoid(X * theta));
