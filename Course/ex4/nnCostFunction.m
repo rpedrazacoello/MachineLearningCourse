@@ -56,25 +56,35 @@ Theta2_grad = zeros(size(Theta2));
 %         computed in ex4.m
 
 a1 = [ones(m, 1) X];
-
 % size (a1) = (5000 x 401)
 
 a2 = sigmoid(a1 * Theta1');
 a2 = [ones(m, 1) a2];
-
 % size (a2) = (5000 x 26)
 
 a3 = sigmoid(a2 * Theta2'); %This is the output layer, h(x)
-a3 = round(a3); %This is rounding up the result so it's either 1 or 0
-
 % size(a3) = (5000 x 10)
 
+%Esto lo que hace es hacer una matriz que en cada fila tendra el valor 1, 2, 3,.., 10 (num_labels=10)
+temp = repmat([1:num_labels], m, 1); % (5000 x 10)
 
-tempJ1 = -y .* log(sigmoid(a3));
-tempJ0 = (1 - y) .* log(sigmoid(1 - a3));
+%Esto lo que hace es hacer una matriz donde se repetira el valor que tiene y para cada X, ejemplo una fila podria ser 10 10 10 10 10 10 10 10 10 10
+temp2 = repmat(y, 1, num_labels); % (5000 x 10)
 
-J = 1/m * sum(sum(tempJ1 - tempJ0));
+%Lo que hace es comparar valor por valor temp y temp2, si el valor es igual entonces pondr un 1, si no, pondra un 0
+y = temp == temp2; % (5000 x 10)
 
+tempJ1 = -y .* log(a3);
+tempJ0 = (1 - y) .* log(1 - a3);
+
+Jtemp = 1/m * sum(sum(tempJ1 - tempJ0));
+
+regTheta1 = Theta1(:, 2:end);
+regTheta2 = Theta2(:, 2:end);
+
+RegTemp = (lambda/(2*m)) * (sum(sum(regTheta1 .^2)) + sum(sum(regTheta2 .^2)));
+
+J = Jtemp + RegTemp;
 
 %
 % Part 2: Implement the backpropagation algorithm to compute the gradients
@@ -92,13 +102,42 @@ J = 1/m * sum(sum(tempJ1 - tempJ0));
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
+
+delta1 = zeros(size(Theta1));
+delta2 = zeros(size(Theta2));
+
+for t = 1:m,
+	a1t = a1(t, :);
+	a2t = a2(t, :);
+	a3t = a3(t, :);
+	yt = y(t, :);
+
+	error3 = (a3t - yt);
+	z = [1; Theta1 * a1t']; % size = (26 x 1)
+	error2 = Theta2' * error3' .* sigmoidGradient(z);
+
+	delta1 = delta1 + (error2(2:end) * a1t);
+	delta2 = delta2 + (error3' * a2t);
+end;
+
+tempTheta1 = Theta1(:, 2:end);
+tempTheta2 = Theta2(:, 2:end);
+
+tempTheta1 = [zeros(size(tempTheta1, 1), 1) tempTheta1];
+tempTheta2 = [zeros(size(tempTheta2, 1), 1) tempTheta2];
+
+
+
+Theta1_grad = ((1/m) * delta1) + ((lambda/m) * tempTheta1);
+Theta2_grad = ((1/m) * delta2) + ((lambda/m) * tempTheta2);
+
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
 %               backpropagation. That is, you can compute the gradients for
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
-%
+%q
 
 
 
