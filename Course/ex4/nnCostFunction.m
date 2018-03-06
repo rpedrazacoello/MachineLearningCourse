@@ -120,16 +120,6 @@ for t = 1:m,
 	delta2 = delta2 + (error3' * a2t);
 end;
 
-tempTheta1 = Theta1(:, 2:end);
-tempTheta2 = Theta2(:, 2:end);
-
-tempTheta1 = [zeros(size(tempTheta1, 1), 1) tempTheta1];
-tempTheta2 = [zeros(size(tempTheta2, 1), 1) tempTheta2];
-
-
-
-Theta1_grad = ((1/m) * delta1) + ((lambda/m) * tempTheta1);
-Theta2_grad = ((1/m) * delta2) + ((lambda/m) * tempTheta2);
 
 % Part 3: Implement regularization with the cost function and gradients.
 %
@@ -137,25 +127,16 @@ Theta2_grad = ((1/m) * delta2) + ((lambda/m) * tempTheta2);
 %               backpropagation. That is, you can compute the gradients for
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
-%q
+%
 
+tempTheta1 = Theta1(:, 2:end); % You take out the first column of Theta because that's not supposed to be regularized
+tempTheta2 = Theta2(:, 2:end);
 
+tempTheta1 = [zeros(size(tempTheta1, 1), 1) tempTheta1]; % You add a first column of zeros to Theta
+tempTheta2 = [zeros(size(tempTheta2, 1), 1) tempTheta2];
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Theta1_grad = ((1/m) * delta1) + ((lambda/m) * tempTheta1);
+Theta2_grad = ((1/m) * delta2) + ((lambda/m) * tempTheta2);
 
 % -------------------------------------------------------------
 
