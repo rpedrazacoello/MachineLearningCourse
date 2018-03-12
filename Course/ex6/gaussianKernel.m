@@ -16,6 +16,9 @@ sim = 0;
 %
 %
 
+tempSim = sum((x1 - x2).^2);
+
+sim = exp(-tempSim/(2 * sigma^2));
 
 
 

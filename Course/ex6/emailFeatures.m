@@ -48,8 +48,10 @@ x = zeros(n, 1);
 %
 %
 
-
-
+%word_indices tiene los indices de las palabras, entonces se tiene que tomar el numero de esos indices y en x ese mismo indice hacerlo 1.
+for i=1:length(word_indices)
+	x(word_indices(i)) = 1;
+end
 
 
 
