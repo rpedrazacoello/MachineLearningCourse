@@ -47,14 +47,23 @@ Theta_grad = zeros(size(Theta));
 
 temp = R .* ((X * Theta') - Y).^2;
 J = 1/2 * sum(sum(temp));
+tempReg = ((lambda/2) * sum(sum(Theta.^2))) + ((lambda/2) * sum(sum(X.^2)));
+J = J + tempReg;
 
+% Later, check this out, even when you're not going to use it.
+for i=1:num_movies
+    idx = find(R(i, :) == 1);
+    tempTheta = Theta(idx, :);
+    tempY = Y(i, idx);
+    X_grad(i, :) = (X(i, :) * tempTheta' - tempY) * tempTheta + lambda * X(i, :);
+end
 
-
-X_grad = 
-
-Theta_grad = 
-
-
+for i=1:num_users
+    idx = find(R(:, i) == 1);
+    tempX = X(idx, :);
+    tempY = Y(idx, i);
+    Theta_grad(i, :) = (tempX * Theta(i, :)' - tempY)' * tempX + lambda * Theta(i, :);
+end
 
 
 
